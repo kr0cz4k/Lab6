@@ -11,7 +11,11 @@ def read_json(file_path):
     with open(file_path, 'r') as file:
         return json.load(file)
 
+def write_json(data, file_path):
+    with open(file_path, 'w') as file:
+        json.dump(data, file, indent=4)
+
 if __name__ == "__main__":
     args = parse_arguments()
     data = read_json(args.input_file)
-    print(data)
+    write_json(data, args.output_file)
