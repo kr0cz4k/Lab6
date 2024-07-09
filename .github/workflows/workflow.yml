@@ -1,0 +1,39 @@
+name: Build and Release
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install pyinstaller
+        pip install pyyaml
+        pip install xmltodict
+        ./installResources.ps1
+
+    - name: Build executable
+      run: pyinstaller --onefile --noconsole main.py
+
+    - name: Upload executable
+      uses: actions/upload-artifact@v3
+      with:
+        name: main
+        path: dist/main.exe
